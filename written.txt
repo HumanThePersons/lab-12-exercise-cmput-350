@@ -1,5 +1,16 @@
 ﻿Q3. What happens to the bounding boxes with update + fullRefit?
+As circles move the bounding boxes stay valid but they stretch and overlap progressively
+more and more, which means the BVH will get less efficient over time as the boxes move.
+The boxes are drawn based on the circles spawn position, and they just re-adjust based
+on that original position.
 
 Q4. What happens with reset (rebuild every frame) instead?
+The tree gets organized around the current position of the circles - not the spawn position
+like in TODO 3. The cost is higher, but the boxes don't get skewed over time and don't lose
+the BVH efficiency.
 
 Q5. Why are some circles drawn with their sides cut off?
+Circles are drawn based on their center point, within the window bounds, but if a circle is
+drawn near an edge, its radius could still overlap the edge and be cutoff. The fix was to
+determine radius first, and then make the range within which to put the center of the circle
+have an offset on each side of the size of the radius.
